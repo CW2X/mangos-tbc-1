@@ -8,6 +8,7 @@
 extern void AddSC_battleground();
 
 // custom
+extern void AddSC_npc_custom_box();
 
 // examples
 extern void AddSC_example_creature();
@@ -346,6 +347,7 @@ void AddScripts()
     AddSC_battleground();
 
     // custom
+    AddSC_npc_custom_box();
 
     // examples
     AddSC_example_creature();
