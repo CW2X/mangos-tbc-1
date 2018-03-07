@@ -9,6 +9,7 @@ extern void AddSC_battleground();
 
 // custom
 extern void AddSC_npc_custom_box();
+extern void AddSC_teleport();
 
 // examples
 extern void AddSC_example_creature();
@@ -348,6 +349,7 @@ void AddScripts()
 
     // custom
     AddSC_npc_custom_box();
+    AddSC_teleport();
 
     // examples
     AddSC_example_creature();
