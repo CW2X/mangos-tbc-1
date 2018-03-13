@@ -38,8 +38,10 @@ inline LPTSTR ErrorMessage(DWORD dw)
 // Declare the static variables of the WheatyExceptionReport class
 //
 TCHAR WheatyExceptionReport::m_szLogFileName[MAX_PATH];
+TCHAR WheatyExceptionReport::m_szDumpFileName[MAX_PATH];
 LPTOP_LEVEL_EXCEPTION_FILTER WheatyExceptionReport::m_previousFilter;
 HANDLE WheatyExceptionReport::m_hReportFile;
+HANDLE WheatyExceptionReport::m_hDumpFile;
 HANDLE WheatyExceptionReport::m_hProcess;
 
 // Declare global instance of class
@@ -87,8 +89,19 @@ LONG WINAPI WheatyExceptionReport::WheatyUnhandledExceptionFilter(
 
     SYSTEMTIME systime;
     GetLocalTime(&systime);
+    sprintf(m_szDumpFileName, "%s\\%s_[%u-%u_%u-%u-%u].dmp",
+            crash_folder_path, pos, systime.wDay, systime.wMonth, systime.wHour, systime.wMinute, systime.wSecond);
+
     sprintf(m_szLogFileName, "%s\\%s_[%u-%u_%u-%u-%u].txt",
             crash_folder_path, pos, systime.wDay, systime.wMonth, systime.wHour, systime.wMinute, systime.wSecond);
+
+    m_hDumpFile = CreateFile(m_szDumpFileName,
+        GENERIC_WRITE,
+        0,
+        0,
+        OPEN_ALWAYS,
+        FILE_FLAG_WRITE_THROUGH,
+        0);
 
     m_hReportFile = CreateFile(m_szLogFileName,
                                GENERIC_WRITE,
@@ -97,6 +110,19 @@ LONG WINAPI WheatyExceptionReport::WheatyUnhandledExceptionFilter(
                                OPEN_ALWAYS,
                                FILE_FLAG_WRITE_THROUGH,
                                0);
+
+    if (m_hDumpFile)
+    {
+        MINIDUMP_EXCEPTION_INFORMATION info;
+        info.ClientPointers = FALSE;
+        info.ExceptionPointers = pExceptionInfo;
+        info.ThreadId = GetCurrentThreadId();
+
+        MiniDumpWriteDump(GetCurrentProcess(), GetCurrentProcessId(),
+            m_hDumpFile, MiniDumpWithIndirectlyReferencedMemory, &info, 0, 0);
+
+        CloseHandle(m_hDumpFile);
+    }
 
     if (m_hReportFile)
     {
