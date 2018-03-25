@@ -1468,6 +1468,8 @@ class Player : public Unit
         bool IsFlyInstantArrive() const;
         void SetFlyInstantArriveDate(uint32 value);
         bool AddItem(uint32 itemId, uint32 count);
+        bool IsDualSpecArrive() const;
+        void SetDualSpecArriveDate(uint32 value);
 
         /*********************************************************/
         /*** MAILED ITEMS SYSTEM ***/

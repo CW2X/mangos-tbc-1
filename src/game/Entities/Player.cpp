@@ -21664,5 +21664,52 @@ std::string Player::GetSpecName(uint8 spec)
 void Player::SetSpecName(uint8 spec, const char* specName)
 {
     CharacterDatabase.PExecute("DELETE FROM character_talent_name WHERE guid='%u' AND spec='%u'", GetGUIDLow(), spec);
-    CharacterDatabase.PExecute("INSERT INTO character_talent_name (guid,spec,name) VALUES ('%u', '%u', '%s')", GetGUIDLow(), spec, specName);
+    CharacterDatabase.PExecute("INSERT INTO character_talent_name (guid, spec, name) VALUES ('%u', '%u', '%s')", GetGUIDLow(), spec, specName);
+}
+
+bool Player::IsDualSpecArrive() const
+{
+    QueryResult* result = CharacterDatabase.PQuery("SELECT guid, talent_last_date FROM characters_limited WHERE guid = '%u' AND talent_last_date >= NOW()", GetGUIDLow());
+    if (result)
+    {
+        return true;
+    }
+    return false;
+}
+
+void Player::SetDualSpecArriveDate(uint32 value)
+{
+    if (value <= 0)
+        return;
+
+    time_t now = time(nullptr);
+    time_t last_date = time_t(0);
+    char sTimeDate[128] = { 0 };
+    QueryResult* result = CharacterDatabase.PQuery("SELECT guid, UNIX_TIMESTAMP(talent_last_date) FROM characters_limited WHERE guid = '%u'", GetGUIDLow());
+    if (result)
+    {
+        Field* fields = result->Fetch();
+        last_date = time_t(fields[1].GetUInt64()); 
+        if (last_date > now)
+            last_date += value;
+        else
+            last_date = now + value;
+
+        strftime(sTimeDate, 64, "%Y-%m-%d %H:%M:%S", localtime(&last_date));
+        CharacterDatabase.PExecute("UPDATE characters_limited SET talent_last_date = '%s' WHERE guid = '%u'", sTimeDate, GetGUIDLow());
+        delete result;
+    }
+    else
+    {
+        last_date = now + value;
+        strftime(sTimeDate, 64, "%Y-%m-%d %H:%M:%S", localtime(&last_date));
+        QueryResult* resultguld = CharacterDatabase.PQuery("SELECT guid FROM characters_limited WHERE guid = '%u'", GetGUIDLow());
+        if (resultguld)
+        {
+            CharacterDatabase.PExecute("UPDATE characters_limited SET talent_last_date = '%s' WHERE guid = '%u'", sTimeDate, GetGUIDLow());
+            delete resultguld;
+        }
+        else
+            CharacterDatabase.PExecute("INSERT INTO characters_limited (guid, talent_last_date) VALUES ('%u', '%s')", GetGUIDLow(), sTimeDate);
+    }
 }

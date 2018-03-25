@@ -22,14 +22,19 @@ bool GossipHello_npc_tool(Player* pPlayer, Creature* pCreature)
 {
     pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_DOT, "|TInterface\\Icons\\INV_Misc_Coin_04:28|t |cFF0041FF积分查询|r　 ", GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 1);
     pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_DOT, "|TInterface\\Icons\\INV_Misc_Coin_02:28|t |cFF0041FF兑换积分|r　 ", GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 2);
-    pPlayer->ADD_GOSSIP_ITEM_EXTENDED(GOSSIP_ICON_DOT, "|TInterface\\Icons\\INV_Misc_Rune_01:28|t |cFF0041FF绑定炉石|r　 ", GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 3, "你是否需要绑定回城点？|r　 ", 0, false);
+    pPlayer->ADD_GOSSIP_ITEM_EXTENDED(GOSSIP_ICON_DOT, "|TInterface\\Icons\\INV_Misc_Rune_01:28|t |cFF0041FF绑定炉石|r　 ", GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 3, "你是否需要绑定回城点？　 ", 0, false);
     pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_DOT, "|TInterface\\Icons\\INV_Misc_Coin_01:28|t |cFF0041FF游戏商店|r　 ", GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 4);
-    //pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_DOT, "|cFF0041FF我要秒专业|r　 ", GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 5);
-    //pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_DOT, "|cFF0041FF[30积分]开启双天赋包月-未实现|r　 ", GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 7);
+    pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_DOT, "|cFF0041FF我要秒专业|r　 ", GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 5);
+
+    if (pPlayer->IsDualSpecArrive())  //如果开通了双天赋包月就显示续费操作
+        pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_DOT, "|cFFFF6600[已开通]|r|cFF0041FF开启双天赋包月服务（查看信息）|r　 ", GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 9);
+    else
+        pPlayer->ADD_GOSSIP_ITEM_EXTENDED(GOSSIP_ICON_DOT, "|cFFFF6600[30积分]|r|cFF0041FF开启双天赋页包月（30天）|r　 ", GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 8, "你是否需要开通包月双天赋？　 ", 0, false);
+
     if (pPlayer->IsFlyInstantArrive())  //如果开通了瞬飞包月就显示续费操作
         pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_DOT, "|cFFFF6600[已开通]|r|cFF0041FF开启瞬飞包月服务（查看信息）|r　 ", GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 11);
     else
-        pPlayer->ADD_GOSSIP_ITEM_EXTENDED(GOSSIP_ICON_DOT, "|cFFFF6600[20积分]|r|cFF0041FF开启瞬飞包月（30天）|r　 ", GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 10, "你是否需要开通包月瞬飞？|r　 ", 0, false);
+        pPlayer->ADD_GOSSIP_ITEM_EXTENDED(GOSSIP_ICON_DOT, "|cFFFF6600[20积分]|r|cFF0041FF开启瞬飞包月（30天）|r　 ", GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 10, "你是否需要开通包月瞬飞？　 ", 0, false);
 
     pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_DOT, "|cFFFF6600[功　能]|cFF0041FF角色服务 |r　 ", GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 12);
     
@@ -48,16 +53,15 @@ bool GossipSelect_npc_tool(Player* pPlayer, Creature* pCreature, uint32 /*uiSend
     {
         case GOSSIP_ACTION_INFO_DEF + 1:
         {
-            //pPlayer->GetSession()->SendNotification("你当前帐户积分：%d ", pPlayer->Getjifen());
-            pPlayer->GetSession()->SendNotification("|cFFFFFF33你当前帐户积分：|r|cFF33FF00%d|r ", pPlayer->Getjifen());
+            pPlayer->GetSession()->SendNotification("|cFFFFFF33你当前帐户积分：|r|cFF33FF00%u|r ", pPlayer->Getjifen());
             pPlayer->CLOSE_GOSSIP_MENU();
             break;
         }
         case GOSSIP_ACTION_INFO_DEF + 2:  //兑换货币
         {
-            pPlayer->ADD_GOSSIP_ITEM_EXTENDED(GOSSIP_ICON_DOT, "|cFF0041FF兑换1个积分|r　 ", GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 100, "你是否需要兑换积分货币？|r　 ", 0, false);
-            pPlayer->ADD_GOSSIP_ITEM_EXTENDED(GOSSIP_ICON_DOT, "|cFF0041FF兑换10个积分|r　 ", GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 101, "你是否需要兑换积分货币？|r　 ", 0, false);
-            pPlayer->ADD_GOSSIP_ITEM_EXTENDED(GOSSIP_ICON_DOT, "|cFF0041FF兑换100个积分|r　 ", GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 102, "你是否需要兑换积分货币？|r　 ", 0, false);
+            pPlayer->ADD_GOSSIP_ITEM_EXTENDED(GOSSIP_ICON_DOT, "|cFF0041FF兑换1个积分|r　 ", GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 100, "你是否需要兑换积分货币？　 ", 0, false);
+            pPlayer->ADD_GOSSIP_ITEM_EXTENDED(GOSSIP_ICON_DOT, "|cFF0041FF兑换10个积分|r　 ", GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 101, "你是否需要兑换积分货币？　 ", 0, false);
+            pPlayer->ADD_GOSSIP_ITEM_EXTENDED(GOSSIP_ICON_DOT, "|cFF0041FF兑换100个积分|r　 ", GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 102, "你是否需要兑换积分货币？　 ", 0, false);
             pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_DOT, "|cFFCC00CC注意：兑换的时候至少需要四个背包格子，出现损失概不负责，兑换比例一比一。|r　 ", GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 999);
             pPlayer->SEND_GOSSIP_MENU(999999, pCreature->GetObjectGuid());
             break;
@@ -87,11 +91,49 @@ bool GossipSelect_npc_tool(Player* pPlayer, Creature* pCreature, uint32 /*uiSend
             pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_DOT, "|TInterface\\Icons\\Trade_Mining:28|t |cFFFF6600[50积分]|r|cFF0041FF采矿等级加满|r　 ", GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 208);
             pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_DOT, "|TInterface\\Icons\\Trade_Herbalism:28|t |cFFFF6600[50积分]|r|cFF0041FF草药等级加满|r　 ", GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 209);
             pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_DOT, "|TInterface\\Icons\\INV_Misc_Pelt_Wolf_01:28|t |cFFFF6600[50积分]|r|cFF0041FF剥皮等级加满|r　 ", GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 210);
-            pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_DOT, "|TInterface\\Icons\\Spell_Holy_SealOfSacrifice:28|t |cFF00FF99[50积分]|r|cFF00CCCC急救等级加满|r　 ", GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 211);
+            pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_DOT, "|TInterface\\Icons\\Spell_Holy_SealOfSacrifice:28|t |cFFFF6600[50积分]|r|cFF00CCCC急救等级加满|r　 ", GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 211);
             pPlayer->SEND_GOSSIP_MENU(999999, pCreature->GetObjectGuid());
             break;
         }
 
+        case GOSSIP_ACTION_INFO_DEF + 8: //双天赋包月
+        {
+            if (pPlayer->HasItemCount(SET_ITEM_ID, 30, true)) // 判断物品是否足够.
+            {
+                if (pPlayer->GetSpecsCount() < MAX_TALENT_SPECS)   //判断是否已经激活双天赋 已经激活的就不需要再执行
+                    pPlayer->SetSpecsCount(pPlayer->GetSpecsCount() + 1);
+
+                pPlayer->DestroyItemCount(SET_ITEM_ID, 30, true);  //销毁用户背包里面的物品
+                pPlayer->SetDualSpecArriveDate(2592000); //30天
+                pPlayer->CLOSE_GOSSIP_MENU();
+                pPlayer->GetSession()->SendNotification("|cFFFFFF33双天赋包月服务开通成功！|r ");
+            }
+            else
+            {
+                pPlayer->GetSession()->SendNotification("你的物品不足，无法开通双天赋包月功能！ ");
+                pPlayer->CLOSE_GOSSIP_MENU();
+            }
+            break;
+        }
+        case GOSSIP_ACTION_INFO_DEF + 9: //双天赋包月
+        {
+            std::string last_date = "已到期 ";
+            QueryResult* result = CharacterDatabase.PQuery("SELECT guid, talent_last_date FROM characters_limited WHERE guid = '%u' AND talent_last_date >= NOW()", pPlayer->GetGUIDLow());
+            if (result)
+            {
+                Field* fields = result->Fetch();
+                last_date = fields[1].GetString(); //得到数据库时间
+                delete result;
+            }
+ 
+            std::string sDate = "|cFFCC00CC到期时间: ";
+            sDate += last_date;
+            sDate += "|r　 ";
+            pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_DOT, sDate, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 999);
+            pPlayer->ADD_GOSSIP_ITEM_EXTENDED(GOSSIP_ICON_DOT, "|cFFFF6600[30积分]|r|cFF0041FF延长双天赋包月三十天|r　 ", GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 301, "你是否需要延长包月双天赋？　 ", 0, false);
+            pPlayer->SEND_GOSSIP_MENU(999999, pCreature->GetObjectGuid());
+            break;
+        }
         case GOSSIP_ACTION_INFO_DEF + 10: //瞬飞包月
         {
             if (pPlayer->HasItemCount(SET_ITEM_ID, 20, true)) // 判断物品是否足够.
@@ -111,7 +153,7 @@ bool GossipSelect_npc_tool(Player* pPlayer, Creature* pCreature, uint32 /*uiSend
         case GOSSIP_ACTION_INFO_DEF + 11: //瞬飞包月续费与到期时间
         {
             std::string last_date = "已到期 ";
-            QueryResult* result = CharacterDatabase.PQuery("SELECT guid,last_date FROM character_Instant_fly WHERE guid = '%u' AND last_date >= NOW()", pPlayer->GetGUIDLow());
+            QueryResult* result = CharacterDatabase.PQuery("SELECT guid, fly_last_date FROM characters_limited WHERE guid = '%u' AND fly_last_date >= NOW()", pPlayer->GetGUIDLow());
             if (result)
             {
                 Field* fields = result->Fetch();
@@ -123,15 +165,15 @@ bool GossipSelect_npc_tool(Player* pPlayer, Creature* pCreature, uint32 /*uiSend
             sDate += last_date;
             sDate += "|r　 ";
             pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_DOT, sDate, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 999);
-            pPlayer->ADD_GOSSIP_ITEM_EXTENDED(GOSSIP_ICON_DOT, "|cFFFF6600[20积分]|r|cFF0041FF延长瞬飞包月三十天|r　 ", GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 300, "你是否需要延长包月瞬飞？|r　 ", 0, false);
+            pPlayer->ADD_GOSSIP_ITEM_EXTENDED(GOSSIP_ICON_DOT, "|cFFFF6600[20积分]|r|cFF0041FF延长瞬飞包月三十天|r　 ", GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 300, "你是否需要延长包月瞬飞？　 ", 0, false);
             pPlayer->SEND_GOSSIP_MENU(999999, pCreature->GetObjectGuid());
             break;
         }
 
         case GOSSIP_ACTION_INFO_DEF + 12: //增强功能
         {
-            pPlayer->ADD_GOSSIP_ITEM_EXTENDED(GOSSIP_ICON_DOT, "|cFFFF6600[50积分]|r|cFF0041FF修改角色名称|r　 ", GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 400, "你是否需要修改角色名称？|r　 ", 0, false);
-            pPlayer->ADD_GOSSIP_ITEM_EXTENDED(GOSSIP_ICON_DOT, "|cFFFF6600[免　费]|r|cFF0041FF武器技能全满|r　 ", GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 401, "你是否需要升级武器技能？|r　 ", 0, false);
+            pPlayer->ADD_GOSSIP_ITEM_EXTENDED(GOSSIP_ICON_DOT, "|cFFFF6600[50积分]|r|cFF0041FF修改角色名称|r　 ", GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 400, "你是否需要修改角色名称？　 ", 0, false);
+            pPlayer->ADD_GOSSIP_ITEM_EXTENDED(GOSSIP_ICON_DOT, "|cFFFF6600[免　费]|r|cFF0041FF武器技能全满|r　 ", GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 401, "你是否需要升级武器技能？　 ", 0, false);
             pPlayer->SEND_GOSSIP_MENU(999999, pCreature->GetObjectGuid());
             break;
         }
@@ -329,6 +371,23 @@ bool GossipSelect_npc_tool(Player* pPlayer, Creature* pCreature, uint32 /*uiSend
             {
 
                 pPlayer->GetSession()->SendNotification("你的物品不足，无法延长瞬飞包月时间！ ");
+                pPlayer->CLOSE_GOSSIP_MENU();
+            }
+            break;
+        }
+        case GOSSIP_ACTION_INFO_DEF + 301: //双天赋延长时间
+        {
+            if (pPlayer->HasItemCount(SET_ITEM_ID, 30, true)) // 判断物品是否足够.
+            {
+                pPlayer->DestroyItemCount(SET_ITEM_ID, 30, true); //销毁用户背包里面的物品
+                pPlayer->SetDualSpecArriveDate(2592000);//30天
+                pPlayer->CLOSE_GOSSIP_MENU();
+                pPlayer->GetSession()->SendNotification("|cFFFFFF33延长双天赋包月服务时间成功！|r ");
+            }
+            else
+            {
+
+                pPlayer->GetSession()->SendNotification("你的物品不足，无法延长双天赋包月时间！ ");
                 pPlayer->CLOSE_GOSSIP_MENU();
             }
             break;

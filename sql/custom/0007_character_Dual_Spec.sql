@@ -37,3 +37,10 @@ CREATE TABLE `character_talent_name` (
   `name` varchar(255) NOT NULL DEFAULT '',
   PRIMARY KEY (`guid`,`spec`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- ================================================
+-- Table structure for table `characters_limited`
+-- ================================================
+
+ALTER TABLE `characters_limited`
+  ADD COLUMN `talent_last_date` datetime NOT NULL DEFAULT '0000-00-00 00:00:00' AFTER `fly_last_date`;
