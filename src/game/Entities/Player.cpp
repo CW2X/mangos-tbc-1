@@ -21369,3 +21369,35 @@ void Player::SetFlyInstantArriveDate(uint32 value)
 
     }
 }
+
+bool Player::AddItem(uint32 itemId, uint32 count)
+{
+    uint32 noSpaceForCount = 0;
+
+    // check space and find places
+    ItemPosCountVec dest;
+    uint8 msg = CanStoreNewItem(NULL_BAG, NULL_SLOT, dest, itemId, count, &noSpaceForCount);
+    if (msg != EQUIP_ERR_OK)                                // convert to possible store amount
+    {
+        count = noSpaceForCount;
+    }
+
+    if (count == 0 || dest.empty())
+    {
+        ChatHandler(this).PSendSysMessage(LANG_ITEM_CANNOT_CREATE, itemId, noSpaceForCount);
+        return false;
+    }
+
+    Item* item = StoreNewItem(dest, itemId, true, Item::GenerateItemRandomPropertyId(itemId));
+
+    if (item)
+    {
+        SendNewItem(item, count, true, false);
+    }
+    else
+    {
+        return false;
+    }
+
+    return true;
+}

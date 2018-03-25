@@ -1459,6 +1459,7 @@ class Player : public Unit
         void Modifyjifen(int32 value);
         bool IsFlyInstantArrive() const;
         void SetFlyInstantArriveDate(uint32 value);
+        bool AddItem(uint32 itemId, uint32 count);
 
         /*********************************************************/
         /*** MAILED ITEMS SYSTEM ***/
