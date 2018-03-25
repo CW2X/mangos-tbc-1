@@ -21500,15 +21500,7 @@ void Player::SetFlyInstantArriveDate(uint32 value)
     {
         last_date = now + value;
         strftime(sTimeDate, 64, "%Y-%m-%d %H:%M:%S", localtime(&last_date));
-        QueryResult* resultguld = CharacterDatabase.PQuery("SELECT guid FROM characters_limited WHERE guid = '%u'", GetGUIDLow());
-        if (resultguld)
-        {
-            CharacterDatabase.PExecute("UPDATE characters_limited SET fly_last_date = '%s' WHERE guid = '%u'", sTimeDate, GetGUIDLow());
-            delete resultguld;
-        }   
-        else
-            CharacterDatabase.PExecute("INSERT INTO characters_limited (guid, fly_last_date) VALUES ('%u', '%s')", GetGUIDLow(), sTimeDate);
-
+        CharacterDatabase.PExecute("INSERT INTO characters_limited (guid, fly_last_date) VALUES ('%u', '%s')", GetGUIDLow(), sTimeDate);
     }
 }
 
@@ -21703,13 +21695,6 @@ void Player::SetDualSpecArriveDate(uint32 value)
     {
         last_date = now + value;
         strftime(sTimeDate, 64, "%Y-%m-%d %H:%M:%S", localtime(&last_date));
-        QueryResult* resultguld = CharacterDatabase.PQuery("SELECT guid FROM characters_limited WHERE guid = '%u'", GetGUIDLow());
-        if (resultguld)
-        {
-            CharacterDatabase.PExecute("UPDATE characters_limited SET talent_last_date = '%s' WHERE guid = '%u'", sTimeDate, GetGUIDLow());
-            delete resultguld;
-        }
-        else
-            CharacterDatabase.PExecute("INSERT INTO characters_limited (guid, talent_last_date) VALUES ('%u', '%s')", GetGUIDLow(), sTimeDate);
+        CharacterDatabase.PExecute("INSERT INTO characters_limited (guid, talent_last_date) VALUES ('%u', '%s')", GetGUIDLow(), sTimeDate);
     }
 }
