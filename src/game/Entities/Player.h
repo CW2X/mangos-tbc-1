@@ -1482,6 +1482,8 @@ class Player : public Unit
         void SetBonusxp(float value, uint32 time);
         void SetBonusReputation(float value, uint32 time);
 
+        uint32 m_online_reward_time;
+
         /*********************************************************/
         /*** MAILED ITEMS SYSTEM ***/
         /*********************************************************/

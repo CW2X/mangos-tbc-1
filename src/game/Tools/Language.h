@@ -1027,6 +1027,7 @@ enum MangosStrings
     LANG_COMMAND_MODIFY_JF              = 11003, //jf
     LANG_ANNOUNCE_CHEAT                 = 11004, //Anti cheat
     LANG_BUFF_TIME                      = 11005, //Buff Time
+    LANG_ONLINE_REWARD                  = 11006, //Online reward
 
     // NOT RESERVED IDS                   12000-1999999999
     // `db_script_string` table index     2000000000-2000999999 (MIN_DB_SCRIPT_STRING_ID-MAX_DB_SCRIPT_STRING_ID)

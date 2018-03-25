@@ -564,6 +564,9 @@ Player::Player(WorldSession* session): Unit(), m_mover(this), m_camera(this), m_
 
     m_stableSlots = 0;
 
+    //Online Reward Time
+    m_online_reward_time = 0;
+
     /////////////////// Instance System /////////////////////
 
     m_HomebindTimer = 0;
@@ -1402,6 +1405,21 @@ void Player::Update(uint32 update_diff, uint32 p_time)
         {
             if (m_Bonus_reputation_rate > 0.0f)
                 m_Bonus_reputation_rate = 0.0f;
+        }
+    }
+
+    //Online Reward Time
+    if (now > m_Last_tick)
+    {
+        uint32 count = getLevel() / 7;
+        uint32 elapsedRewardTime = uint32(now - m_Last_tick);
+        m_online_reward_time += elapsedRewardTime;
+        if (m_online_reward_time > 3600)
+        {
+            //Reward items
+            AddItem(38186, count ? count : 1);
+            GetSession()->SendNotification(LANG_ONLINE_REWARD);
+            m_online_reward_time = 0;
         }
     }
 

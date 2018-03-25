@@ -1,0 +1,2 @@
+-- mangos_string
+INSERT INTO `mangos_string` VALUES (11006, '|cff00ff00Congratulations, you get an online reward, and the items have been sent to the backpack.|r', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL);
