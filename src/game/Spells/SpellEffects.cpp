@@ -7411,6 +7411,10 @@ void Spell::EffectLeapForward(SpellEffectIndex eff_idx)
 
     float orientation = unitTarget->GetOrientation();
 
+    //The Undercity area Blink special treatment.
+    if (m_spellInfo->Id == 1953 && m_caster->GetAreaId() == 1497 && m_caster->GetPositionZ() <= -60.00f)
+        return;
+
     unitTarget->NearTeleportTo(x, y, z, orientation, unitTarget == m_caster);
 }
 
