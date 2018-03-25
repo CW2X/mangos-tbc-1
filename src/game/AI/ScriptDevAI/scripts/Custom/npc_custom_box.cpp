@@ -174,6 +174,7 @@ bool GossipSelect_npc_tool(Player* pPlayer, Creature* pCreature, uint32 /*uiSend
         {
             pPlayer->ADD_GOSSIP_ITEM_EXTENDED(GOSSIP_ICON_DOT, "|cFFFF6600[50积分]|r|cFF0041FF修改角色名称|r　 ", GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 400, "你是否需要修改角色名称？　 ", 0, false);
             pPlayer->ADD_GOSSIP_ITEM_EXTENDED(GOSSIP_ICON_DOT, "|cFFFF6600[免　费]|r|cFF0041FF武器技能全满|r　 ", GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 401, "你是否需要升级武器技能？　 ", 0, false);
+            pPlayer->ADD_GOSSIP_ITEM_EXTENDED(GOSSIP_ICON_DOT, "|cFFFF6600[2 积分]|r|cFF0041FF人物等级提升一级|r　 ", GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 402, "你是否需要提升等级？　 ", 0, false);
             pPlayer->SEND_GOSSIP_MENU(999999, pCreature->GetObjectGuid());
             break;
         }
@@ -413,6 +414,30 @@ bool GossipSelect_npc_tool(Player* pPlayer, Creature* pCreature, uint32 /*uiSend
             pPlayer->UpdateSkillsToMaxSkillsForLevel();
             pPlayer->GetSession()->SendNotification("恭喜你，所有武器技能已经提升到最大值！ ");
             pPlayer->CLOSE_GOSSIP_MENU();
+            break;
+        }
+        case GOSSIP_ACTION_INFO_DEF + 402: //人物升级
+        {
+            if (pPlayer->HasItemCount(SET_ITEM_ID, 2, true))
+            {
+                if (pPlayer->getLevel() == DEFAULT_MAX_LEVEL)
+                {
+                    pPlayer->GetSession()->SendNotification("你已到最大等级，提升失败！ ");
+                    pPlayer->CLOSE_GOSSIP_MENU();
+                }
+                else
+                {
+                    pPlayer->DestroyItemCount(SET_ITEM_ID, 2, true);
+                    pPlayer->GiveLevel(pPlayer->getLevel() + 1);
+                    pPlayer->GetSession()->SendNotification("恭喜你，等级提升成功了！ ");
+                    pPlayer->CLOSE_GOSSIP_MENU();
+                }
+            }
+            else
+            {
+                pPlayer->GetSession()->SendNotification("你的物品不足，无法提升角色等级！ ");
+                pPlayer->CLOSE_GOSSIP_MENU();
+            }
             break;
         }
         case GOSSIP_ACTION_INFO_DEF + 999:
