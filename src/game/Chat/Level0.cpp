@@ -382,6 +382,6 @@ bool ChatHandler::HandleWorldChatChannelCommand(char* args)
     }
 
     sWorld.SendWorldText(LANG_WORLD_CHAT_CHANNEL, sRaceIcon, m_session->GetPlayerName(), args);
-    m_session->GetPlayer()->ModifyMoney(int32(-ChatMoney));
+    m_session->GetPlayer()->ModifyMoney(-int32(ChatMoney));
     return true;
 }

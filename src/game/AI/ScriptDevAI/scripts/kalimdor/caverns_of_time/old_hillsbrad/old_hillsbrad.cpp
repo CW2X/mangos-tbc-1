@@ -260,7 +260,7 @@ struct npc_thrall_old_hillsbradAI : public npc_escortAI, private DialogueHelper
     GuidList m_lSkarlocAddsGuids;
     GuidList m_lTarrenMillSoldiersGuids;
 
-    void Reset() override //重置
+    void Reset() override
     {
         m_bIsLowHp           = false;
         m_uiStrikeTimer      = urand(3000, 7000);
@@ -283,7 +283,7 @@ struct npc_thrall_old_hillsbradAI : public npc_escortAI, private DialogueHelper
         }
     }
 
-    void Aggro(Unit* /*pWho*/) override //遇到攻击 随机喊话
+    void Aggro(Unit* /*pWho*/) override
     {
         switch (urand(0, 3))
         {
@@ -300,7 +300,7 @@ struct npc_thrall_old_hillsbradAI : public npc_escortAI, private DialogueHelper
         }
     }
 
-    void KilledUnit(Unit* /*pVictim*/) override //护送目标被杀死 随机喊话
+    void KilledUnit(Unit* /*pVictim*/) override 
     {
         switch (urand(0, 2))
         {
@@ -310,7 +310,7 @@ struct npc_thrall_old_hillsbradAI : public npc_escortAI, private DialogueHelper
         }
     }
 
-    void JustDied(Unit* /*pKiller*/) override //杀死
+    void JustDied(Unit* /*pKiller*/) override 
     {
         // fail, and relocation handled in instance script
         if (m_pInstance)
@@ -332,7 +332,7 @@ struct npc_thrall_old_hillsbradAI : public npc_escortAI, private DialogueHelper
         }
     }
 
-    void CorpseRemoved(uint32& uiRespawnDelay) override  //清理尸体
+    void CorpseRemoved(uint32& uiRespawnDelay) override  
     {
         npc_escortAI::CorpseRemoved(uiRespawnDelay);
 
@@ -343,7 +343,7 @@ struct npc_thrall_old_hillsbradAI : public npc_escortAI, private DialogueHelper
             uiRespawnDelay = 12 * HOUR;
     }
 
-    void JustRespawned() override //重生
+    void JustRespawned() override 
     {
         npc_escortAI::JustRespawned();
 
@@ -419,7 +419,7 @@ struct npc_thrall_old_hillsbradAI : public npc_escortAI, private DialogueHelper
         }
     }
 
-    void EnterEvadeMode() override //逃避 随机喊话
+    void EnterEvadeMode() override 
     {
         if (HasEscortState(STATE_ESCORT_ESCORTING))
         {
@@ -434,7 +434,7 @@ struct npc_thrall_old_hillsbradAI : public npc_escortAI, private DialogueHelper
         npc_escortAI::EnterEvadeMode();
     }
 
-    void JustSummoned(Creature* pSummoned) override //召唤生物触发
+    void JustSummoned(Creature* pSummoned) override 
     {
         switch (pSummoned->GetEntry())
         {
@@ -535,7 +535,7 @@ struct npc_thrall_old_hillsbradAI : public npc_escortAI, private DialogueHelper
         }
     }
 
-    void SummonedCreatureJustDied(Creature* pSummoned) override //召唤生物死亡触发(不明白为什么召唤消失后的生物不触发)
+    void SummonedCreatureJustDied(Creature* pSummoned) override
     {
         switch (pSummoned->GetEntry())
         {
@@ -598,7 +598,7 @@ struct npc_thrall_old_hillsbradAI : public npc_escortAI, private DialogueHelper
         }
     }
 
-    void SummonedMovementInform(Creature* pSummoned, uint32 uiType, uint32 uiPointId) override //召唤生物运动模式
+    void SummonedMovementInform(Creature* pSummoned, uint32 uiType, uint32 uiPointId) override 
     {
         if (uiType != POINT_MOTION_TYPE)
             return;
@@ -626,7 +626,7 @@ struct npc_thrall_old_hillsbradAI : public npc_escortAI, private DialogueHelper
         }
     }
 
-    void JustDidDialogueStep(int32 iEntry) override  //生物喊话触发
+    void JustDidDialogueStep(int32 iEntry) override 
     {
         if (!m_pInstance)
             return;
@@ -684,7 +684,7 @@ struct npc_thrall_old_hillsbradAI : public npc_escortAI, private DialogueHelper
         }
     }
 
-    void WaypointReached(uint32 uiPoint) override //到达路径点触发.触发值uiPoint为数据库script_waypoint表 pointid字段ID
+    void WaypointReached(uint32 uiPoint) override
     {
         if (!m_pInstance)
             return;
@@ -908,7 +908,6 @@ struct npc_thrall_old_hillsbradAI : public npc_escortAI, private DialogueHelper
 
                 break;
             case 122:
-                // 召唤龙卫
                 m_lTarrenMillSoldiersGuids.clear();
                 m_creature->SummonCreature(NPC_INFINITE_DEFILER, 2631.0273f, 697.4631f, 56.1964f, 4.67f, TEMPSPAWN_DEAD_DESPAWN, 0);
                 m_creature->SummonCreature(NPC_INFINITE_SABOTEOR, 2639.3439f, 697.82f, 55.8785f, 4.53f, TEMPSPAWN_DEAD_DESPAWN, 0);
@@ -939,7 +938,7 @@ struct npc_thrall_old_hillsbradAI : public npc_escortAI, private DialogueHelper
     }
 
     // Wrapper to restart escort
-    void DoRestartEscortMovement()  //重新启动护航
+    void DoRestartEscortMovement() 
     {
         m_creature->RemoveFlag(UNIT_NPC_FLAGS, UNIT_NPC_FLAG_GOSSIP);
         m_creature->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_IMMUNE_TO_NPC);
@@ -947,7 +946,7 @@ struct npc_thrall_old_hillsbradAI : public npc_escortAI, private DialogueHelper
     }
 
     // Complete the quest for escorting
-    void DoHandleQuestCredit()  //完成护送任务
+    void DoHandleQuestCredit()
     {
         Map::PlayerList const& lPlayerList = m_pInstance->instance->GetPlayers();
 
@@ -966,7 +965,7 @@ struct npc_thrall_old_hillsbradAI : public npc_escortAI, private DialogueHelper
         UpdateEscortAI(uiDiff);
     }
 
-    void UpdateEscortAI(const uint32 uiDiff) override //更新护航任务
+    void UpdateEscortAI(const uint32 uiDiff) override 
     {
         DialogueUpdate(uiDiff);
 
