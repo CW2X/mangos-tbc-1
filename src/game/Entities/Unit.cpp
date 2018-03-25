@@ -965,6 +965,26 @@ uint32 Unit::DealDamage(Unit* pVictim, uint32 damage, CleanDamage const* cleanDa
         else                                                // Killed creature
             JustKilledCreature((Creature*)pVictim, player_tap);
 
+        //Hook for OnPVPKill Event
+        if (this->GetTypeId() == TYPEID_PLAYER)
+        {
+            if (pVictim->GetTypeId() == TYPEID_PLAYER)
+            {
+                sScriptDevAIMgr.OnPVPKill(player_tap, (Player*)pVictim);
+            }
+            else if (pVictim->GetTypeId() == TYPEID_UNIT)
+            {
+                sScriptDevAIMgr.OnCreatureKill(player_tap, (Creature*)pVictim);
+            }
+        }
+        else if (this->GetTypeId() == TYPEID_UNIT)
+        {
+            if (pVictim->GetTypeId() == TYPEID_PLAYER)
+            {
+                sScriptDevAIMgr.OnPlayerKilledByCreature((Creature*)pVictim, player_tap);
+            }
+        }
+
         // stop combat
         DEBUG_FILTER_LOG(LOG_FILTER_DAMAGE, "DealDamageAttackStop");
         pVictim->CombatStop();

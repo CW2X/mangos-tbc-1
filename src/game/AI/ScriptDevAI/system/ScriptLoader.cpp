@@ -11,6 +11,7 @@ extern void AddSC_battleground();
 extern void AddSC_npc_custom_box();
 extern void AddSC_teleport();
 extern void AddSC_item_custom_box();
+extern void AddSC_onevents();
 
 // examples
 extern void AddSC_example_creature();
@@ -352,6 +353,7 @@ void AddScripts()
     AddSC_npc_custom_box();
     AddSC_teleport();
     AddSC_item_custom_box();
+    AddSC_onevents();
 
     // examples
     AddSC_example_creature();

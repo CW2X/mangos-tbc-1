@@ -36,6 +36,7 @@
 #include "BattleGround/BattleGroundMgr.h"
 #include "Social/SocialMgr.h"
 #include "Loot/LootMgr.h"
+#include "AI/ScriptDevAI/ScriptDevAIMgr.h"
 
 #include <mutex>
 #include <deque>
@@ -553,6 +554,9 @@ void WorldSession::LogoutPlayer(bool Save)
 
         DEBUG_LOG("SESSION: Sent SMSG_LOGOUT_COMPLETE Message");
     }
+
+    //Hook for OnLogout Event
+    sScriptDevAIMgr.OnLogout(_player);
 
     m_playerLogout = false;
     m_playerSave = false;

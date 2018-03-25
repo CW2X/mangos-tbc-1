@@ -137,6 +137,72 @@ void Script::RegisterSelf(bool bReportError)
 //********************************
 //*** Functions to be Exported ***
 
+void ScriptDevAIMgr::OnLogin(Player* pPlayer, bool firstLogin)
+{
+    Script* pTempScript = m_scripts[GetScriptId("scripted_on_events")];
+
+    if (!pTempScript || !pTempScript->pOnLogin)
+        return;
+
+    return pTempScript->pOnLogin(pPlayer, firstLogin);
+}
+
+void ScriptDevAIMgr::OnLogout(Player* pPlayer)
+{
+    Script* pTempScript = m_scripts[GetScriptId("scripted_on_events")];
+
+    if (!pTempScript || !pTempScript->pOnLogout)
+        return;
+
+    return pTempScript->pOnLogout(pPlayer);
+}
+
+void ScriptDevAIMgr::OnPVPKill(Player* killer, Player* killed)
+{
+    Script* pTempScript = m_scripts[GetScriptId("scripted_on_events")];
+
+    if (!pTempScript || !pTempScript->pOnPVPKill)
+        return;
+
+    return pTempScript->pOnPVPKill(killer, killed);
+}
+
+void ScriptDevAIMgr::OnCreatureKill(Player* killer, Creature* killed)
+{
+    Script* pTempScript = m_scripts[GetScriptId("scripted_on_events")];
+    if (!pTempScript || !pTempScript->pOnCreatureKill)
+        return;
+
+    return pTempScript->pOnCreatureKill(killer, killed);
+}
+
+void ScriptDevAIMgr::OnPlayerKilledByCreature(Creature* killer, Player* killed)
+{
+    Script* pTempScript = m_scripts[GetScriptId("scripted_on_events")];
+    if (!pTempScript || !pTempScript->pOnPlayerKilledByCreature)
+        return;
+
+    return pTempScript->pOnPlayerKilledByCreature(killer, killed);
+}
+
+void ScriptDevAIMgr::OnPlayerLevelChanged(Player* pPlayer, uint8 oldLevel, uint8 newLevel)
+{
+    Script* pTempScript = m_scripts[GetScriptId("scripted_on_events")];
+    if (!pTempScript || !pTempScript->pOnLevelChanged)
+        return;
+
+    return pTempScript->pOnLevelChanged(pPlayer, oldLevel, newLevel);
+}
+
+void ScriptDevAIMgr::OnPlayerTalentsReset(Player* pPlayer, bool no_cost)
+{
+    Script* pTempScript = m_scripts[GetScriptId("scripted_on_events")];
+    if (!pTempScript || !pTempScript->pOnTalentsReset)
+        return;
+
+    return pTempScript->pOnTalentsReset(pPlayer, no_cost);
+}
+
 bool ScriptDevAIMgr::OnGossipHello(Player* pPlayer, Creature* pCreature)
 {
     Script* pTempScript = GetScript(pCreature->GetScriptId());
@@ -574,6 +640,9 @@ void ScriptDevAIMgr::LoadScriptNames()
     }
     while (result->NextRow());
     delete result;
+
+    //OnEvent Changes
+    m_scriptNames.push_back("scripted_on_events");
 
     std::sort(m_scriptNames.begin(), m_scriptNames.end());
 

@@ -2495,6 +2495,8 @@ void Player::GiveLevel(uint32 level)
     if (level == getLevel())
         return;
 
+    sScriptDevAIMgr.OnPlayerLevelChanged(this, getLevel(), level);
+
     uint32 plClass = getClass();
 
     PlayerLevelInfo info;
@@ -3725,6 +3727,8 @@ uint32 Player::resetTalentsCost() const
 
 bool Player::resetTalents(bool no_cost)
 {
+    sScriptDevAIMgr.OnPlayerTalentsReset(this, no_cost);
+
     // not need after this call
     if (HasAtLoginFlag(AT_LOGIN_RESET_TALENTS))
         RemoveAtLoginFlag(AT_LOGIN_RESET_TALENTS, true);

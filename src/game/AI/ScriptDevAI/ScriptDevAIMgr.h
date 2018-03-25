@@ -65,6 +65,8 @@ enum EscortFaction
 struct Script
 {
     Script() :
+        pOnLogin(nullptr), pOnLogout(nullptr), pOnPVPKill(nullptr), pOnCreatureKill(nullptr), pOnPlayerKilledByCreature(nullptr),
+        pOnLevelChanged(nullptr), pOnTalentsReset(nullptr),
         pGossipHello(nullptr), pGossipHelloGO(nullptr), pGossipSelect(nullptr), pGossipSelectGO(nullptr), pGossipSelectItem(nullptr),
         pGossipSelectWithCode(nullptr), pGossipSelectGOWithCode(nullptr), pGossipSelectItemWithCode(nullptr),
         pDialogStatusNPC(nullptr), pDialogStatusGO(nullptr),
@@ -77,6 +79,13 @@ struct Script
 
     std::string Name;
 
+    void (*pOnLogin)(Player*, bool);
+    void (*pOnLogout)(Player*);
+    void (*pOnPVPKill)(Player*, Player*);
+    void (*pOnCreatureKill)(Player*, Creature*);
+    void (*pOnPlayerKilledByCreature)(Creature*, Player*);
+    void (*pOnLevelChanged)(Player*, uint8, uint8);
+    void (*pOnTalentsReset)(Player*, bool);
     bool (*pGossipHello)(Player*, Creature*);
     bool (*pGossipHelloGO)(Player*, GameObject*);
     bool (*pGossipSelect)(Player*, Creature*, uint32, uint32);
@@ -122,6 +131,13 @@ class ScriptDevAIMgr
         void LoadAreaTriggerScripts();
         void LoadEventIdScripts();
 
+        void OnLogin(Player* pPlayer, bool loginFirst);
+        void OnLogout(Player* pPlayer);
+        void OnPVPKill(Player* killer, Player* killed);
+        void OnCreatureKill(Player* killer, Creature* killed);
+        void OnPlayerKilledByCreature(Creature* killer, Player* killed);
+        void OnPlayerLevelChanged(Player* pPlayer, uint8 oldLevel, uint8 newLevel);
+        void OnPlayerTalentsReset(Player* pPlayer, bool no_cost);
         bool OnGossipHello(Player* pPlayer, Creature* pCreature);
         bool OnGossipHello(Player* pPlayer, GameObject* pGameObject);
         bool OnGossipSelect(Player* pPlayer, Creature* pCreature, uint32 sender, uint32 action, const char* code);
