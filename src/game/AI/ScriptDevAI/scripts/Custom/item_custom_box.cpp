@@ -121,7 +121,7 @@ bool GossipSelectItemWithCode_custom_dualspec(Player* pPlayer, Item* pItem, uint
     return true;
 }
 
-void AddSC_item_custom_dualspec()
+void AddSC_item_custom_box()
 {
     Script* pNewScript;
     pNewScript = new Script;
