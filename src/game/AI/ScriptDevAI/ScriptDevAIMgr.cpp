@@ -223,6 +223,29 @@ uint32 ScriptDevAIMgr::GetDialogStatus(const Player* pPlayer, const Creature* pC
     return pTempScript->pDialogStatusNPC(pPlayer, pCreature);
 }
 
+bool ScriptDevAIMgr::OnGossipSelect(Player* pPlayer, Item* pItem, uint32 uiSender, uint32 uiAction, const char* code)
+{
+    Script* pTempScript = GetScript(pItem->GetProto()->ScriptId);
+
+    if (!pTempScript)
+        return false;
+
+    if (code)
+    {
+        if (!pTempScript->pGossipSelectItemWithCode)
+            return false;
+
+        pPlayer->PlayerTalkClass->ClearMenus();
+        return pTempScript->pGossipSelectItemWithCode(pPlayer, pItem, uiSender, uiAction, code);
+    }
+
+    if (!pTempScript->pGossipSelectItem)
+        return false;
+
+    pPlayer->PlayerTalkClass->ClearMenus();
+    return pTempScript->pGossipSelectItem(pPlayer, pItem, uiSender, uiAction);
+}
+
 uint32 ScriptDevAIMgr::GetDialogStatus(const Player* pPlayer, const GameObject* pGo) const
 {
     Script* pTempScript = GetScript(pGo->GetGOInfo()->ScriptId);
@@ -362,6 +385,8 @@ bool ScriptDevAIMgr::OnItemUse(Player* pPlayer, Item* pItem, SpellCastTargets co
 
     if (!pTempScript || !pTempScript->pItemUse)
         return false;
+
+    pPlayer->PlayerTalkClass->ClearMenus();
 
     return pTempScript->pItemUse(pPlayer, pItem, targets);
 }

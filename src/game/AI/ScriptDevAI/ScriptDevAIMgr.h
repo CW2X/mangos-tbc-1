@@ -65,8 +65,8 @@ enum EscortFaction
 struct Script
 {
     Script() :
-        pGossipHello(nullptr), pGossipHelloGO(nullptr), pGossipSelect(nullptr), pGossipSelectGO(nullptr),
-        pGossipSelectWithCode(nullptr), pGossipSelectGOWithCode(nullptr),
+        pGossipHello(nullptr), pGossipHelloGO(nullptr), pGossipSelect(nullptr), pGossipSelectGO(nullptr), pGossipSelectItem(nullptr),
+        pGossipSelectWithCode(nullptr), pGossipSelectGOWithCode(nullptr), pGossipSelectItemWithCode(nullptr),
         pDialogStatusNPC(nullptr), pDialogStatusGO(nullptr),
         pQuestAcceptNPC(nullptr), pQuestAcceptGO(nullptr), pQuestAcceptItem(nullptr),
         pQuestRewardedNPC(nullptr), pQuestRewardedGO(nullptr),
@@ -81,8 +81,10 @@ struct Script
     bool (*pGossipHelloGO)(Player*, GameObject*);
     bool (*pGossipSelect)(Player*, Creature*, uint32, uint32);
     bool (*pGossipSelectGO)(Player*, GameObject*, uint32, uint32);
+    bool (*pGossipSelectItem)(Player*, Item*, uint32, uint32);
     bool (*pGossipSelectWithCode)(Player*, Creature*, uint32, uint32, const char*);
     bool (*pGossipSelectGOWithCode)(Player*, GameObject*, uint32, uint32, const char*);
+    bool (*pGossipSelectItemWithCode)(Player*, Item*, uint32, uint32, const char*);
     uint32(*pDialogStatusNPC)(const Player*, const Creature*);
     uint32(*pDialogStatusGO)(const Player*, const GameObject*);
     bool (*pQuestAcceptNPC)(Player*, Creature*, Quest const*);
@@ -124,6 +126,7 @@ class ScriptDevAIMgr
         bool OnGossipHello(Player* pPlayer, GameObject* pGameObject);
         bool OnGossipSelect(Player* pPlayer, Creature* pCreature, uint32 sender, uint32 action, const char* code);
         bool OnGossipSelect(Player* pPlayer, GameObject* pGameObject, uint32 sender, uint32 action, const char* code);
+        bool OnGossipSelect(Player* pPlayer, Item* pItem, uint32 sender, uint32 action, const char* code);
         bool OnQuestAccept(Player* pPlayer, Creature* pCreature, Quest const* pQuest);
         bool OnQuestAccept(Player* pPlayer, GameObject* pGameObject, Quest const* pQuest);
         bool OnQuestAccept(Player* pPlayer, Item* pItem, Quest const* pQuest);
