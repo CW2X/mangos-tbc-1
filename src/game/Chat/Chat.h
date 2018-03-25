@@ -603,6 +603,7 @@ class ChatHandler
         bool HandleWaterwalkCommand(char* args);
         bool HandleQuitCommand(char* args);
         bool HandleWorldChatChannelCommand(char* args);
+        bool HandleBuffTimeCommand(char* args);
 #ifdef BUILD_PLAYERBOT
         bool HandlePlayerbotCommand(char* args);
 #endif

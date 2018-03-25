@@ -8,6 +8,11 @@
 
 #include "AI/ScriptDevAI/include/precompiled.h"
 
+
+/*####################
+## item_custom_dualspec
+######################*/
+
 bool GossipItemUse_custom_dualspec(Player* pPlayer, Item* pItem, const SpellCastTargets& /*pTargets*/)
 {
 
@@ -121,13 +126,128 @@ bool GossipSelectItemWithCode_custom_dualspec(Player* pPlayer, Item* pItem, uint
     return true;
 }
 
+/*####################
+## item_xp_rate0
+######################*/
+bool GossipItemUse_xp_rate0(Player* pPlayer, Item* pItem, const SpellCastTargets& /*pTargets*/)
+{
+    if(!pPlayer)
+        return false;
+
+    pPlayer->SetBonusxp(0.5f, 7200);
+    pPlayer->DestroyItemCount(pItem->GetEntry(), 1, true, false);
+    pPlayer->GetSession()->SendNotification("|cFFFFFF33恭喜你，经验获取提高 50％持续时间两小时！|r ");
+    return true;
+}
+
+/*####################
+## item_xp_rate1
+######################*/
+bool GossipItemUse_xp_rate1(Player* pPlayer, Item* pItem, const SpellCastTargets& /*pTargets*/)
+{
+    if (!pPlayer)
+        return false;
+
+    pPlayer->SetBonusxp(1.0f, 7200);
+    pPlayer->DestroyItemCount(pItem->GetEntry(), 1, true, false);
+    pPlayer->GetSession()->SendNotification("|cFFFFFF33恭喜你，经验获取提高100％持续时间两小时！|r ");
+    return true;
+}
+
+/*####################
+## item_xp_rate2
+######################*/
+bool GossipItemUse_xp_rate2(Player* pPlayer, Item* pItem, const SpellCastTargets& /*pTargets*/)
+{
+    if (!pPlayer)
+        return false;
+
+    pPlayer->SetBonusxp(1.5f, 7200);
+    pPlayer->DestroyItemCount(pItem->GetEntry(), 1, true, false);
+    pPlayer->GetSession()->SendNotification("|cFFFFFF33恭喜你，经验获取提高150％持续时间两小时！|r ");
+    return true;
+}
+
+/*####################
+## item_Reputation_rate0
+######################*/
+bool GossipItemUse_Reputation_rate0(Player* pPlayer, Item* pItem, const SpellCastTargets& /*pTargets*/)
+{
+    if (!pPlayer)
+        return false;
+
+    pPlayer->SetBonusReputation(0.5f, 7200);
+    pPlayer->DestroyItemCount(pItem->GetEntry(), 1, true, false);
+    pPlayer->GetSession()->SendNotification("|cFFFFFF33恭喜你，声望获取提高 50％持续时间两小时！|r ");
+    return true;
+}
+
+/*####################
+## item_Reputation_rate1
+######################*/
+bool GossipItemUse_Reputation_rate1(Player* pPlayer, Item* pItem, const SpellCastTargets& /*pTargets*/)
+{
+    if (!pPlayer)
+        return false;
+
+    pPlayer->SetBonusReputation(1.0f, 7200);
+    pPlayer->DestroyItemCount(pItem->GetEntry(), 1, true, false);
+    pPlayer->GetSession()->SendNotification("|cFFFFFF33恭喜你，声望获取提高100％持续时间两小时！|r ");
+    return true;
+}
+
+/*####################
+## item_Reputation_rate2
+######################*/
+bool GossipItemUse_Reputation_rate2(Player* pPlayer, Item* pItem, const SpellCastTargets& /*pTargets*/)
+{
+    if (!pPlayer)
+        return false;
+
+    pPlayer->SetBonusReputation(1.5f, 7200);
+    pPlayer->DestroyItemCount(pItem->GetEntry(), 1, true, false);
+    pPlayer->GetSession()->SendNotification("|cFFFFFF33恭喜你，声望获取提高 150％持续时间两小时！|r ");
+    return true;
+}
+
 void AddSC_item_custom_box()
 {
     Script* pNewScript;
+
     pNewScript = new Script;
     pNewScript->Name = "item_custom_dualspec";
     pNewScript->pItemUse = &GossipItemUse_custom_dualspec;
     pNewScript->pGossipSelectItem = &GossipSelectItem_custom_dualspec;
     pNewScript->pGossipSelectItemWithCode = &GossipSelectItemWithCode_custom_dualspec;
+    pNewScript->RegisterSelf(false);
+
+    pNewScript = new Script;
+    pNewScript->Name = "item_xp_rate0";
+    pNewScript->pItemUse = &GossipItemUse_xp_rate0;
+    pNewScript->RegisterSelf(false);
+
+    pNewScript = new Script;
+    pNewScript->Name = "item_xp_rate1";
+    pNewScript->pItemUse = &GossipItemUse_xp_rate1;
+    pNewScript->RegisterSelf(false);
+
+    pNewScript = new Script;
+    pNewScript->Name = "item_xp_rate2";
+    pNewScript->pItemUse = &GossipItemUse_xp_rate2;
+    pNewScript->RegisterSelf(false);
+
+    pNewScript = new Script;
+    pNewScript->Name = "item_Reputation_rate0";
+    pNewScript->pItemUse = &GossipItemUse_Reputation_rate0;
+    pNewScript->RegisterSelf(false);
+
+    pNewScript = new Script;
+    pNewScript->Name = "item_Reputation_rate1";
+    pNewScript->pItemUse = &GossipItemUse_Reputation_rate1;
+    pNewScript->RegisterSelf(false);
+
+    pNewScript = new Script;
+    pNewScript->Name = "item_Reputation_rate2";
+    pNewScript->pItemUse = &GossipItemUse_Reputation_rate2;
     pNewScript->RegisterSelf(false);
 }

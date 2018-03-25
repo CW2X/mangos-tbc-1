@@ -385,3 +385,12 @@ bool ChatHandler::HandleWorldChatChannelCommand(char* args)
     m_session->GetPlayer()->ModifyMoney(-int32(ChatMoney));
     return true;
 }
+
+/// Buff Time
+bool ChatHandler::HandleBuffTimeCommand(char* args)
+{
+    PSendSysMessage(LANG_BUFF_TIME, m_session->GetPlayer()->GetBonusxpRate(), m_session->GetPlayer()->GetBonusxpTime(),
+        m_session->GetPlayer()->GetBonusReputationRate(), m_session->GetPlayer()->GetBonusReputationTime(), args);
+
+    return true;
+}

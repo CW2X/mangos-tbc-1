@@ -1471,6 +1471,17 @@ class Player : public Unit
         bool IsDualSpecArrive() const;
         void SetDualSpecArriveDate(uint32 value);
 
+        float m_Bonus_xp_rate;
+        float m_Bonus_reputation_rate;
+        float GetBonusxpRate() { return m_Bonus_xp_rate; }
+        float GetBonusReputationRate() { return m_Bonus_reputation_rate; }
+        uint32 m_Bonus_xp_time;
+        uint32 m_Bonus_reputation_time;
+        uint32 GetBonusxpTime() { return m_Bonus_xp_time; }
+        uint32 GetBonusReputationTime() { return m_Bonus_reputation_time; }
+        void SetBonusxp(float value, uint32 time);
+        void SetBonusReputation(float value, uint32 time);
+
         /*********************************************************/
         /*** MAILED ITEMS SYSTEM ***/
         /*********************************************************/
@@ -2303,7 +2314,8 @@ class Player : public Unit
         void _LoadBGData(QueryResult* result);
         void _LoadIntoDataField(const char* data, uint32 startOffset, uint32 count);
         void _LoadCreatedInstanceTimers();
-        void _SaveNewInstanceIdTimer();
+        void _LoadBonusTimes();
+        
 
         /*********************************************************/
         /***                   SAVE SYSTEM                     ***/
@@ -2322,6 +2334,8 @@ class Player : public Unit
         void _SaveSpells();
         void _SaveBGData();
         void _SaveStats();
+        void _SaveNewInstanceIdTimer();
+        void _SaveBonusTimes();
 
         void _SetCreateBits(UpdateMask* updateMask, Player* target) const override;
         void _SetUpdateBits(UpdateMask* updateMask, Player* target) const override;

@@ -153,7 +153,7 @@ namespace MaNGOS
                 else
                     raceKillxp = sWorld.getConfig(CONFIG_FLOAT_HORDE_RATE_XP_KILL);
 
-                return (uint32)(xp_gain * (sWorld.getConfig(CONFIG_FLOAT_RATE_XP_KILL) + raceKillxp));
+                return (uint32)(xp_gain * (sWorld.getConfig(CONFIG_FLOAT_RATE_XP_KILL) + pl->GetBonusxpRate() + raceKillxp));
             }
             else
                 return 0;

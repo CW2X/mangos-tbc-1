@@ -820,6 +820,7 @@ ChatCommand* ChatHandler::getCommandTable()
         { "quit",           SEC_CONSOLE,        true,  &ChatHandler::HandleQuitCommand,                "", nullptr },
         { "mmap",           SEC_GAMEMASTER,     false, nullptr,                                        "", mmapCommandTable },
         { "sj",             SEC_PLAYER,         true,  &ChatHandler::HandleWorldChatChannelCommand,    "", nullptr },
+        { "buff",           SEC_PLAYER,         true,  &ChatHandler::HandleBuffTimeCommand,            "", nullptr },
 #ifdef BUILD_PLAYERBOT
         { "bot",            SEC_PLAYER,         false, &ChatHandler::HandlePlayerbotCommand,           "", nullptr },
 #endif

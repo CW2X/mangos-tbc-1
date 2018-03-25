@@ -1383,6 +1383,28 @@ void Player::Update(uint32 update_diff, uint32 p_time)
             m_DetectInvTimer -= update_diff;
     }
 
+    // Update Played Bonus limited time
+    if (now > m_Last_tick)
+    {
+        uint32 elapsedTime = uint32(now - m_Last_tick);
+
+        if (m_Bonus_xp_time > 0)
+            m_Bonus_xp_time -= elapsedTime;
+        else
+        {
+            if (m_Bonus_xp_rate > 0.0f)
+                m_Bonus_xp_rate = 0.0f;
+        }
+
+        if (m_Bonus_reputation_time > 0)
+            m_Bonus_reputation_time -= elapsedTime;
+        else
+        {
+            if (m_Bonus_reputation_rate > 0.0f)
+                m_Bonus_reputation_rate = 0.0f;
+        }
+    }
+
     // Played time
     if (now > m_Last_tick)
     {
@@ -6322,7 +6344,7 @@ int32 Player::CalculateReputationGain(ReputationSource source, int32 rep, int32 
     else
         raceGain = sWorld.getConfig(CONFIG_FLOAT_HORDE_RATE_REPUTATION_GAIN);
 
-    int32 result = int32((sWorld.getConfig(CONFIG_FLOAT_RATE_REPUTATION_GAIN) + raceGain) * rep * percent / 100.0f);
+    int32 result = int32((sWorld.getConfig(CONFIG_FLOAT_RATE_REPUTATION_GAIN) + m_Bonus_reputation_rate + raceGain) * rep * percent / 100.0f);
 
     if (result && maxRep && faction)
     {
@@ -13062,7 +13084,7 @@ void Player::RewardQuest(Quest const* pQuest, uint32 reward, Object* questGiver,
             racexp = sWorld.getConfig(CONFIG_FLOAT_HORDE_RATE_XP_QUEST);
     }
 
-    uint32 xp = uint32(pQuest->XPValue(this) * (sWorld.getConfig(CONFIG_FLOAT_RATE_XP_QUEST) + racexp));
+    uint32 xp = uint32(pQuest->XPValue(this) * (sWorld.getConfig(CONFIG_FLOAT_RATE_XP_QUEST) + m_Bonus_xp_rate + racexp));
 
     if (getLevel() < sWorld.getConfig(CONFIG_UINT32_MAX_PLAYER_LEVEL))
         GiveXP(xp, nullptr);
@@ -15105,6 +15127,8 @@ bool Player::LoadFromDB(ObjectGuid guid, SqlQueryHolder* holder)
 
     _LoadCreatedInstanceTimers();
 
+    _LoadBonusTimes();
+
     return true;
 }
 
@@ -16354,6 +16378,7 @@ void Player::SaveToDB()
     _SaveAuras();
     _SaveSkills();
     _SaveNewInstanceIdTimer();
+    _SaveBonusTimes();
     m_reputationMgr.SaveToDB();
     GetSession()->SaveTutorialsData();                      // changed only while character in game
 
@@ -21696,5 +21721,77 @@ void Player::SetDualSpecArriveDate(uint32 value)
         last_date = now + value;
         strftime(sTimeDate, 64, "%Y-%m-%d %H:%M:%S", localtime(&last_date));
         CharacterDatabase.PExecute("INSERT INTO characters_limited (guid, talent_last_date) VALUES ('%u', '%s')", GetGUIDLow(), sTimeDate);
+    }
+}
+
+void Player::_LoadBonusTimes()
+{
+    QueryResult* result = CharacterDatabase.PQuery("SELECT guid, xp_rate, xp_time, reputation_rate, reputation_time FROM characters_limited WHERE guid = '%u'", GetGUIDLow());
+    if (result)
+    {
+        Field* fields = result->Fetch();
+        m_Bonus_xp_rate = fields[1].GetFloat();
+        m_Bonus_xp_time = fields[2].GetUInt64();
+        m_Bonus_reputation_rate = fields[3].GetFloat();
+        m_Bonus_reputation_time = fields[4].GetUInt64();
+        delete result;
+    }
+    else
+    {
+        m_Bonus_xp_rate = 0.0f;
+        m_Bonus_xp_time = 0;
+        m_Bonus_reputation_rate = 0.0f;
+        m_Bonus_reputation_time = 0;
+     }
+}
+
+void Player::_SaveBonusTimes()
+{
+    QueryResult* result = CharacterDatabase.PQuery("SELECT guid FROM characters_limited WHERE guid = '%u'", GetGUIDLow());
+    if (result)
+    {
+        CharacterDatabase.PExecute("UPDATE characters_limited SET xp_rate = '%f', xp_time = '%u', reputation_rate = '%f', reputation_time = '%u' WHERE guid = '%u'", 
+            m_Bonus_xp_rate, m_Bonus_xp_time, m_Bonus_reputation_rate, m_Bonus_reputation_time, GetGUIDLow());
+        delete result;
+    }
+}
+
+void Player::SetBonusxp(float value, uint32 time)
+{
+    if (value <= 0.0f || time <= 0)
+        return;
+
+    m_Bonus_xp_rate = value;
+    m_Bonus_xp_time = time;
+
+    QueryResult* result = CharacterDatabase.PQuery("SELECT guid FROM characters_limited WHERE guid = '%u'", GetGUIDLow());
+    if (result)
+    {
+        CharacterDatabase.PExecute("UPDATE characters_limited SET xp_rate = '%f', xp_time = '%u' WHERE guid = '%u'", m_Bonus_xp_rate, m_Bonus_xp_time, GetGUIDLow());
+        delete result;
+    }
+    else
+    {
+        CharacterDatabase.PExecute("INSERT INTO characters_limited (guid, xp_rate, xp_time) VALUES ('%u', '%f', '%u')", GetGUIDLow(), m_Bonus_xp_rate, m_Bonus_xp_time);
+    }
+}
+
+void Player::SetBonusReputation(float value, uint32 time)
+{
+    if (value <= 0.0f || time <= 0)
+        return;
+
+    m_Bonus_reputation_rate = value;
+    m_Bonus_reputation_time = time;
+
+    QueryResult* result = CharacterDatabase.PQuery("SELECT guid FROM characters_limited WHERE guid = '%u'", GetGUIDLow());
+    if (result)
+    {
+        CharacterDatabase.PExecute("UPDATE characters_limited SET reputation_rate = '%f', reputation_time = '%u' WHERE guid = '%u'", m_Bonus_reputation_rate, m_Bonus_reputation_time, GetGUIDLow());
+        delete result;
+    }
+    else
+    {
+        CharacterDatabase.PExecute("INSERT INTO characters_limited (guid, reputation_rate, reputation_time) VALUES ('%u', '%f', '%u')", GetGUIDLow(), m_Bonus_reputation_rate, m_Bonus_reputation_time);
     }
 }
