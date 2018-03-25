@@ -1110,6 +1110,71 @@ void WorldSession::HandleWrapItemOpcode(WorldPacket& recv_data)
         return;
     }
 
+    // transmogrification stone
+    if (gift->GetEntry() == 90001)
+    {
+        if (item->GetProto()->Quality > 4)
+            return;
+
+        // only ammor and weapon can be transmoged
+        if (item->GetProto()->Class != 2 && item->GetProto()->Class != 4)
+            return;
+
+        // skip Miscellaneous / Libram / Idol / Totem
+        if (item->GetProto()->Class == 4 && (item->GetProto()->SubClass == 0 || item->GetProto()->SubClass == 7 || item->GetProto()->SubClass == 8 || item->GetProto()->SubClass == 9))
+            return;
+
+        // find the slot of the item
+        uint8 slots[4];
+        _player->ViableEquipSlots(item->GetProto(), &slots[0], true);
+        uint8 slot = slots[0];
+
+        if (Item* titem = _player->GetItemByPos(INVENTORY_SLOT_BAG_0, slot))
+        {
+            //Dual Weapon
+            if (slot == EQUIPMENT_SLOT_MAINHAND && _player->GetItemByPos(INVENTORY_SLOT_BAG_0, EQUIPMENT_SLOT_OFFHAND) && (item->GetProto()->InventoryType == INVTYPE_WEAPON))
+            {
+                if (Item* OnHandWeaponItem = _player->GetItemByPos(INVENTORY_SLOT_BAG_0, EQUIPMENT_SLOT_OFFHAND))
+                {
+                    if ((OnHandWeaponItem->GetProto()->Class == item->GetProto()->Class) && (OnHandWeaponItem->GetProto()->SubClass == item->GetProto()->SubClass) && (OnHandWeaponItem->GetProto()->InventoryType == INVTYPE_WEAPON))
+                        slot = EQUIPMENT_SLOT_OFFHAND;
+                    else
+                    {
+                        if ((titem->GetProto()->Class == item->GetProto()->Class) && (titem->GetProto()->SubClass == item->GetProto()->SubClass))
+                            slot = EQUIPMENT_SLOT_MAINHAND;
+                        else
+                            return;
+                    }
+                }
+            }
+            else
+            {
+                if ((slot == EQUIPMENT_SLOT_MAINHAND && _player->GetItemByPos(INVENTORY_SLOT_BAG_0, EQUIPMENT_SLOT_MAINHAND)) || (slot == EQUIPMENT_SLOT_OFFHAND && _player->GetItemByPos(INVENTORY_SLOT_BAG_0, EQUIPMENT_SLOT_OFFHAND)))
+                {
+                    if (titem->GetProto()->Class != item->GetProto()->Class || titem->GetProto()->SubClass != item->GetProto()->SubClass)
+                        return;
+                }
+            }
+
+            // save to db
+            uint32 guid = item->GetOwnerGuid().GetCounter();
+            CharacterDatabase.BeginTransaction();
+            // remove old transmog
+            CharacterDatabase.PExecute("DELETE FROM character_transmog WHERE guid = %u AND slot = %u", guid, slot);
+            // insert new transmog
+            CharacterDatabase.PExecute("INSERT INTO character_transmog VALUES ('%u', '%u', '%u', '%u')", guid, slot, item->GetGUIDLow(), 0);
+            CharacterDatabase.CommitTransaction();
+
+            // make transmogrification effect
+            _player->SetUInt32Value(PLAYER_VISIBLE_ITEM_1_0 + (slot * MAX_VISIBLE_ITEM_OFFSET), item->GetEntry());
+
+            // remove the transmog stone
+            uint32 count = 1;
+            _player->DestroyItemCount(gift, count, true);
+        }
+        return;
+    }
+
     if (item->GetGuidValue(ITEM_FIELD_GIFTCREATOR))         // HasFlag(ITEM_FIELD_FLAGS, ITEM_DYNFLAG_WRAPPED);
     {
         _player->SendEquipError(EQUIP_ERR_WRAPPED_CANT_BE_WRAPPED, item, nullptr);

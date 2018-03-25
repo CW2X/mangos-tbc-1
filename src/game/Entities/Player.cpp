@@ -7947,7 +7947,7 @@ uint8 Player::FindEquipSlot(ItemPrototype const* proto, uint32 slot, bool swap) 
 }
 
 
-bool Player::ViableEquipSlots(ItemPrototype const* proto, uint8* viable_slots) const
+bool Player::ViableEquipSlots(ItemPrototype const* proto, uint8* viable_slots, bool transmog /*= false*/) const
 {
     uint8 pClass;
 
@@ -7965,7 +7965,7 @@ bool Player::ViableEquipSlots(ItemPrototype const* proto, uint8* viable_slots) c
     viable_slots[2] = NULL_SLOT;
     viable_slots[3] = NULL_SLOT;
 
-    if (CanUseItem(proto) == EQUIP_ERR_OK)
+    if (CanUseItem(proto) == EQUIP_ERR_OK || transmog)
     {
         //DEBUG_LOG("**** [Player::ViableEquipSlots] Class/Race/Faction determined viable ****");
 
@@ -10319,6 +10319,10 @@ void Player::RemoveItem(uint8 bag, uint8 slot, bool update)
                     }
                     else if (slot == EQUIPMENT_SLOT_OFFHAND)
                         UpdateExpertise(OFF_ATTACK);
+
+                    // remove the transmog record
+                    if (GetUInt32Value(PLAYER_VISIBLE_ITEM_1_0 + (slot * MAX_VISIBLE_ITEM_OFFSET)) != pItem->GetEntry())
+                        CharacterDatabase.PExecute("DELETE FROM character_transmog WHERE guid = %u AND slot = %u", pItem->GetOwnerGuid().GetCounter(), slot);
                 }
             }
 
