@@ -91,7 +91,7 @@ bool GossipSelect_npc_tool(Player* pPlayer, Creature* pCreature, uint32 /*uiSend
             pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_DOT, "|TInterface\\Icons\\Trade_Mining:28|t |cFFFF6600[50积分]|r|cFF0041FF采矿等级加满|r　 ", GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 208);
             pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_DOT, "|TInterface\\Icons\\Trade_Herbalism:28|t |cFFFF6600[50积分]|r|cFF0041FF草药等级加满|r　 ", GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 209);
             pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_DOT, "|TInterface\\Icons\\INV_Misc_Pelt_Wolf_01:28|t |cFFFF6600[50积分]|r|cFF0041FF剥皮等级加满|r　 ", GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 210);
-            pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_DOT, "|TInterface\\Icons\\Spell_Holy_SealOfSacrifice:28|t |cFFFF6600[50积分]|r|cFF00CCCC急救等级加满|r　 ", GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 211);
+            pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_DOT, "|TInterface\\Icons\\Spell_Holy_SealOfSacrifice:28|t |cFFFF6600[50积分]|r|cFF0041FF急救等级加满|r　 ", GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 211);
             pPlayer->SEND_GOSSIP_MENU(999999, pCreature->GetObjectGuid());
             break;
         }
@@ -422,7 +422,7 @@ bool GossipSelect_npc_tool(Player* pPlayer, Creature* pCreature, uint32 /*uiSend
             {
                 if (pPlayer->getLevel() == DEFAULT_MAX_LEVEL)
                 {
-                    pPlayer->GetSession()->SendNotification("你已到最大等级，提升失败！ ");
+                    pPlayer->GetSession()->SendNotification("你已最高等级，提升失败！ ");
                     pPlayer->CLOSE_GOSSIP_MENU();
                 }
                 else
