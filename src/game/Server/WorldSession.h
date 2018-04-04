@@ -117,6 +117,7 @@ class PacketFilter
         virtual ~PacketFilter() {}
 
         virtual bool Process(WorldPacket const& /*packet*/) const { return true; }
+        virtual bool ProcessLogout() const { return true; }
 
     protected:
         WorldSession* const m_pSession;
@@ -130,6 +131,8 @@ class MapSessionFilter : public PacketFilter
         ~MapSessionFilter() {}
 
         virtual bool Process(WorldPacket const& packet) const override;
+        // in Map::Update() we do not process player logout!
+        virtual bool ProcessLogout() const override { return false; }
 };
 
 // class used to filer only thread-unsafe packets from queue
@@ -200,9 +203,9 @@ class WorldSession
         }
 
         /// Is logout cooldown expired?
-        bool ShouldLogOut() const
+        bool ShouldLogOut(time_t currTime) const
         {
-            return (_logoutTime > 0 && time(nullptr) >= _logoutTime + 20);
+            return (_logoutTime > 0 && currTime >= _logoutTime + 20);
         }
 
         void LogoutPlayer(bool Save);
