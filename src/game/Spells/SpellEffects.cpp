@@ -2368,7 +2368,7 @@ void Spell::EffectDummy(SpellEffectIndex eff_idx)
                     if (!item)
                         return;
 
-                    // all poison enchantments is temporary					
+                    // all poison enchantments is temporary
                     if (uint32 enchant_id = item->GetEnchantmentId(TEMP_ENCHANTMENT_SLOT))
                     {
                         SpellItemEnchantmentEntry const* pEnchant = sSpellItemEnchantmentStore.LookupEntry(enchant_id);
@@ -3321,7 +3321,7 @@ void Spell::EffectHeal(SpellEffectIndex /*eff_idx*/)
             if (m_caster->HasAura(17619)) // Alchemists stone
                 addhealth *= 1.4f; // increase healing by 40%
         }
-        else 
+        else
         {
             switch (m_spellInfo->Id)
             {
@@ -3343,10 +3343,10 @@ void Spell::EffectHeal(SpellEffectIndex /*eff_idx*/)
                             damageAmount += (*i)->GetModifier()->m_amount;
                     if (damageAmount)
                         m_caster->RemoveAurasDueToSpell(45062);
-                
+
                     addhealth += damageAmount;
                     break;
-                
+
                 }
             }
         }
@@ -5795,6 +5795,15 @@ void Spell::EffectScriptEffect(SpellEffectIndex eff_idx)
                     m_caster->CastSpell(unitTarget, spellId, TRIGGERED_OLD_TRIGGERED);
                     return;
                 }
+                case 24731:                                 // Cannon Fire
+                case 42868:                                 // Fire Cannon
+                {
+                    if (!unitTarget || m_caster->GetTypeId() != TYPEID_PLAYER)
+                        return;
+
+                    unitTarget->CastSpell(m_caster, m_spellInfo->Id == 24731 ? 24742 : 42867, TRIGGERED_OLD_TRIGGERED);
+                    return;
+                }
                 case 24737:                                 // Ghost Costume
                 {
                     if (!unitTarget || unitTarget->GetTypeId() != TYPEID_PLAYER)
@@ -5802,6 +5811,15 @@ void Spell::EffectScriptEffect(SpellEffectIndex eff_idx)
 
                     // Ghost Costume (male or female)
                     m_caster->CastSpell(unitTarget, unitTarget->getGender() == GENDER_MALE ? 24735 : 24736, TRIGGERED_OLD_TRIGGERED);
+                    return;
+                }
+                case 24742:                                 // Magic Wings
+                case 42867:                                 // Magic Wings (Terrokar Forest)
+                {
+                    if(!unitTarget)
+                        return;
+
+                    unitTarget->RemoveAurasDueToSpell(24754);   // Darkmoon Faire Cannon root aura
                     return;
                 }
                 case 24751:                                 // Trick or Treat
@@ -6900,6 +6918,15 @@ void Spell::EffectActivateObject(SpellEffectIndex eff_idx)
         case 19:                    // unk - 1 spell
         case 20:                    // unk - 2 spells
         {
+            // Specific case for Darkmoon Faire Cannon (this is probably a hint that our logic about GO use / activation is not accurate)
+            switch (m_spellInfo->Id)
+            {
+            case 24731:
+            case 42868:
+                gameObjTarget->SendGameObjectCustomAnim(gameObjTarget->GetObjectGuid());
+                return;
+            }
+
             static ScriptInfo activateCommand = generateActivateCommand();
 
             int32 delay_secs = m_spellInfo->CalculateSimpleValue(eff_idx);
