@@ -43,7 +43,7 @@ PetAI::PetAI(Creature* creature) : CreatureAI(creature), inCombat(false)
     switch (((Pet*)creature)->getPetType())
     {
         case HUNTER_PET:    //hunter pets attack from behind
-            m_attackAngle = M_PI_F;
+            m_attackAngle = 0.0f;
             break;
         case MINI_PET:
             SetReactState(REACT_PASSIVE);
@@ -374,6 +374,10 @@ void PetAI::UpdateAI(const uint32 diff)
                 {
                     m_unit->GetMotionMaster()->Clear(false);
                     m_unit->GetMotionMaster()->MoveIdle();
+                }
+                else 
+                {
+                    m_unit->GetMotionMaster()->MoveFollow(owner, PET_FOLLOW_DIST, PET_FOLLOW_ANGLE); 
                 }
             }
             else if (charmInfo && charmInfo->HasCommandState(COMMAND_FOLLOW)
