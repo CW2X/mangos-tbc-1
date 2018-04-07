@@ -98,7 +98,7 @@ bool GossipSelect_npc_tool(Player* pPlayer, Creature* pCreature, uint32 /*uiSend
 
         case GOSSIP_ACTION_INFO_DEF + 8: //双天赋包月
         {
-            if (pPlayer->HasItemCount(SET_ITEM_ID, 30, true)) // 判断物品是否足够.
+            if (pPlayer->HasItemCount(SET_ITEM_ID, 30)) // 判断物品是否足够.
             {
                 if (pPlayer->GetSpecsCount() < MAX_TALENT_SPECS)   //判断是否已经激活双天赋 已经激活的就不需要再执行
                     pPlayer->SetSpecsCount(pPlayer->GetSpecsCount() + 1);
@@ -136,7 +136,7 @@ bool GossipSelect_npc_tool(Player* pPlayer, Creature* pCreature, uint32 /*uiSend
         }
         case GOSSIP_ACTION_INFO_DEF + 10: //瞬飞包月
         {
-            if (pPlayer->HasItemCount(SET_ITEM_ID, 20, true)) // 判断物品是否足够.
+            if (pPlayer->HasItemCount(SET_ITEM_ID, 20)) // 判断物品是否足够.
             {
                 pPlayer->DestroyItemCount(SET_ITEM_ID, 20, true);  //销毁用户背包里面的物品
                 pPlayer->SetFlyInstantArriveDate(2592000); //30天
@@ -336,7 +336,7 @@ bool GossipSelect_npc_tool(Player* pPlayer, Creature* pCreature, uint32 /*uiSend
 
             if (pPlayer->HasSkill(Skill_Type))
             {
-                if (pPlayer->HasItemCount(SET_ITEM_ID, Item_Value, true) && pPlayer->GetBaseSkillValue(Skill_Type) < SETSKILL_MAXVAL)
+                if (pPlayer->HasItemCount(SET_ITEM_ID, Item_Value) && pPlayer->GetBaseSkillValue(Skill_Type) < SETSKILL_MAXVAL)
                 {
                     pPlayer->DestroyItemCount(SET_ITEM_ID, Item_Value, true);  //销毁用户背包里面的物品
                     pPlayer->SetSkill(Skill_Type, SETSKILL_MAXVAL, SETSKILL_MAXVAL);
@@ -361,7 +361,7 @@ bool GossipSelect_npc_tool(Player* pPlayer, Creature* pCreature, uint32 /*uiSend
         ////////////////////////////////////////////////////秒升专业结束//////////////////////////////////////////////////////////////////
         case GOSSIP_ACTION_INFO_DEF + 300: //瞬飞延长时间
         {
-            if (pPlayer->HasItemCount(SET_ITEM_ID, 20, true)) // 判断物品是否足够.
+            if (pPlayer->HasItemCount(SET_ITEM_ID, 20)) // 判断物品是否足够.
             {
                 pPlayer->DestroyItemCount(SET_ITEM_ID, 20, true); //销毁用户背包里面的物品
                 pPlayer->SetFlyInstantArriveDate(2592000);//30天
@@ -378,7 +378,7 @@ bool GossipSelect_npc_tool(Player* pPlayer, Creature* pCreature, uint32 /*uiSend
         }
         case GOSSIP_ACTION_INFO_DEF + 301: //双天赋延长时间
         {
-            if (pPlayer->HasItemCount(SET_ITEM_ID, 30, true)) // 判断物品是否足够.
+            if (pPlayer->HasItemCount(SET_ITEM_ID, 30)) // 判断物品是否足够.
             {
                 pPlayer->DestroyItemCount(SET_ITEM_ID, 30, true); //销毁用户背包里面的物品
                 pPlayer->SetDualSpecArriveDate(2592000);//30天
@@ -395,7 +395,7 @@ bool GossipSelect_npc_tool(Player* pPlayer, Creature* pCreature, uint32 /*uiSend
         }
         case GOSSIP_ACTION_INFO_DEF + 400: //修改名称
         {
-            if (pPlayer->HasItemCount(SET_ITEM_ID, 50, true)) // 判断物品是否足够.
+            if (pPlayer->HasItemCount(SET_ITEM_ID, 50)) // 判断物品是否足够.
             {
                 pPlayer->DestroyItemCount(SET_ITEM_ID, 50, true);  //销毁用户背包里面的物品
                 pPlayer->SetAtLoginFlag(AT_LOGIN_RENAME);    //修改名字
@@ -418,7 +418,7 @@ bool GossipSelect_npc_tool(Player* pPlayer, Creature* pCreature, uint32 /*uiSend
         }
         case GOSSIP_ACTION_INFO_DEF + 402: //人物升级
         {
-            if (pPlayer->HasItemCount(SET_ITEM_ID, 2, true))
+            if (pPlayer->HasItemCount(SET_ITEM_ID, 2))
             {
                 if (pPlayer->getLevel() == DEFAULT_MAX_LEVEL)
                 {
