@@ -966,23 +966,46 @@ uint32 Unit::DealDamage(Unit* pVictim, uint32 damage, CleanDamage const* cleanDa
             JustKilledCreature((Creature*)pVictim, player_tap);
 
         //Hook for OnPVPKill Event
-        if (this->GetTypeId() == TYPEID_PLAYER)
+        if (pVictim->GetTypeId() == TYPEID_PLAYER && (this->GetTypeId() == TYPEID_PLAYER || (this->GetMaster() && this->GetMaster()->GetTypeId() == TYPEID_PLAYER)))
         {
-            if (pVictim->GetTypeId() == TYPEID_PLAYER)
-            {
+            if (player_tap)
                 sScriptDevAIMgr.OnPVPKill(player_tap, (Player*)pVictim);
-            }
-            else if (pVictim->GetTypeId() == TYPEID_UNIT)
+        }
+        //Hook for OnCreatureKill Event
+        else if (pVictim->GetTypeId() == TYPEID_UNIT && (this->GetTypeId() == TYPEID_PLAYER || (this->GetMaster() && this->GetMaster()->GetTypeId() == TYPEID_PLAYER)))
+        {
+            if (player_tap)
             {
-                sScriptDevAIMgr.OnCreatureKill(player_tap, (Creature*)pVictim);
+                if (Group* group = player_tap->GetGroup())
+                {
+                    for (GroupReference* itr = group->GetFirstMember(); itr != nullptr; itr = itr->next())
+                    {
+                        Player* pGroupGuy = itr->getSource();
+                        if (!pGroupGuy)
+                            continue;
+
+                        // will proccessed later
+                        if (pGroupGuy == player_tap)
+                            continue;
+
+                        // member (alive or dead) or his corpse at req. distance
+                        if (!pGroupGuy->IsAtGroupRewardDistance((Creature*)pVictim))
+                            continue;
+
+                        sScriptDevAIMgr.OnCreatureKill(pGroupGuy, (Creature*)pVictim);
+                    }
+                }
+
+                // member (alive or dead) or his corpse at req. distance
+                if (player_tap->IsAtGroupRewardDistance((Creature*)pVictim))
+                    sScriptDevAIMgr.OnCreatureKill(player_tap, (Creature*)pVictim);
             }
         }
-        else if (this->GetTypeId() == TYPEID_UNIT)
+        //Hook for OnPlayerKilledByCreature Event
+        else if (pVictim->GetTypeId() == TYPEID_PLAYER && this->GetTypeId() == TYPEID_UNIT)
         {
-            if (pVictim->GetTypeId() == TYPEID_PLAYER)
-            {
+            if (player_tap)
                 sScriptDevAIMgr.OnPlayerKilledByCreature((Creature*)pVictim, player_tap);
-            }
         }
 
         // stop combat
