@@ -1,6 +1,6 @@
---
+-- ===========================================
 -- Instance "old hillsbrad"
---
+-- ===========================================
 
 -- 萨尔脚本路径修复必须和最新引擎匹配
 UPDATE script_waypoint SET location_x='2635.06', location_y='673.892', location_z='54.4713', waittime='6000' WHERE entry='17876' AND pointid='121';
@@ -34,3 +34,11 @@ UPDATE creature_template SET FactionAlliance='1748', FactionHorde='1748' WHERE E
 UPDATE creature_template SET FactionAlliance='1748', FactionHorde='1748' WHERE Entry='20546';
 UPDATE creature_template SET FactionAlliance='1748', FactionHorde='1748' WHERE Entry='20547';
 UPDATE creature_template SET FactionAlliance='634', FactionHorde='634' WHERE Entry='20523';
+
+
+-- ===========================================
+-- 技能修复
+-- ===========================================
+
+-- 火舌武器不应该有法伤加成(TBC)
+UPDATE spell_bonus_data SET direct_bonus='0' WHERE entry='8026';
