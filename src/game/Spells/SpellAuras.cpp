@@ -6068,6 +6068,15 @@ void Aura::PeriodicTick()
                         target->CastSpell(nullptr, 29965, TRIGGERED_OLD_TRIGGERED);
                         break;
                     }
+                    case 38048: //Curse of Pain
+                    {
+                        if (target->GetHealth() <= target->GetMaxHealth() / 2)
+                        {
+                            target->RemoveAurasDueToSpell(GetId());
+                            return;
+                        }
+                        break;
+                    }
                     default:
                         break;
                 }
