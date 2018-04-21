@@ -7703,14 +7703,9 @@ void Spell::EffectPlayerPull(SpellEffectIndex eff_idx)
     if (!unitTarget || unitTarget->GetTypeId() != TYPEID_PLAYER)
         return;
 
-    float dist = unitTarget->GetDistance2d(m_caster);
-    if (damage && dist > damage)
-        dist = float(damage);
-
     // Projectile motion
     float speedXY = float(m_spellInfo->EffectMiscValue[eff_idx]) * 0.1f;
-    float time = dist / speedXY;
-    float speedZ = ((m_caster->GetPositionZ() - unitTarget->GetPositionZ()) + 0.5f * time * time * Movement::gravity) / time;
+    float speedZ = float(damage ? damage : unitTarget->GetDistance2d(m_caster));
 
     ((Player*)unitTarget)->KnockBackFrom(m_caster, -speedXY, speedZ);
 }
