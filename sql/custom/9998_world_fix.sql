@@ -37,8 +37,43 @@ UPDATE creature_template SET FactionAlliance='634', FactionHorde='634' WHERE Ent
 
 
 -- ===========================================
+-- 副本 "鲜血熔炉"
+-- ===========================================
+
+-- 仇恨链(影月技师)
+UPDATE creature_linking SET master_guid='134055' WHERE guid='134054';
+
+
+-- ===========================================
+-- 副本 "禁魔监狱"
+-- ===========================================
+
+-- 禁魔监狱斥候
+UPDATE creature_template SET UnitFlags='0' WHERE Entry='20869';
+UPDATE creature_template SET UnitFlags='0' WHERE Entry='21586';
+
+
+-- ===========================================
+-- 副本 "黑色沼泽"
+-- ===========================================
+
+-- 暗水鳄鱼
+UPDATE creature_template SET FactionAlliance='16', FactionHorde='16' WHERE Entry='17952';
+
+
+-- ===========================================
 -- 技能修复
 -- ===========================================
 
 -- 火舌武器不应该有法伤加成(TBC)
 UPDATE spell_bonus_data SET direct_bonus='0' WHERE entry='8026';
+
+
+-- ===========================================
+-- 任务修复
+-- ===========================================
+
+-- q.9738(失踪的同伴)
+INSERT INTO `gossip_menu` VALUES (7520, 9119, 7520, 0);
+INSERT INTO `dbscripts_on_gossip` VALUES (7520, 0, 8, 17893, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 'killcredit');
+
