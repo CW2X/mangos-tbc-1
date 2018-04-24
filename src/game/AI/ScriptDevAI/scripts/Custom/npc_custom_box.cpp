@@ -110,7 +110,7 @@ bool GossipSelect_npc_tool(Player* pPlayer, Creature* pCreature, uint32 /*uiSend
             }
             else
             {
-                pPlayer->GetSession()->SendNotification("你的物品不足，无法开通双天赋包月功能！ ");
+                pPlayer->GetSession()->SendNotification("你的物品不足，无法开通双天赋包月功能！　 ");
                 pPlayer->CLOSE_GOSSIP_MENU();
             }
             break;
