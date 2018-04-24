@@ -21,6 +21,7 @@
 #include "Server/WorldSession.h"
 #include "Log.h"
 #include "Entities/Player.h"
+#include "World/World.h"
 
 void WorldSession::HandleDuelAcceptedOpcode(WorldPacket& recvPacket)
 {
@@ -60,6 +61,37 @@ void WorldSession::HandleDuelAcceptedOpcode(WorldPacket& recvPacket)
 
     self->SendDuelCountdown(3000);
     opponent->SendDuelCountdown(3000);
+
+    if (sWorld.getConfig(CONFIG_BOOL_DUEL_RESET))
+    {
+        if (!self->GetMap()->IsDungeon() && !opponent->GetMap()->IsDungeon())
+        {
+            // remove diminishing returns
+            self->ClearDiminishings();
+            opponent->ClearDiminishings();
+
+            // set health, mana to 100%
+            self->SetHealth(self->GetMaxHealth());
+            opponent->SetHealth(opponent->GetMaxHealth());
+
+            //set mana to 100%
+            if (self->GetPowerType() == POWER_MANA)
+                self->SetPower(POWER_MANA, self->GetMaxPower(POWER_MANA));
+            if (opponent->GetPowerType() == POWER_MANA)
+                opponent->SetPower(POWER_MANA, opponent->GetMaxPower(POWER_MANA));
+
+            //set Rage to 0
+            if (self->GetPowerType() == POWER_RAGE)
+                self->SetPower(POWER_RAGE, 0);
+            if (opponent->GetPowerType() == POWER_RAGE)
+                opponent->SetPower(POWER_RAGE, 0);
+
+            // remove cooldowns < 15min
+            self->RemoveArenaSpellCooldowns();
+            opponent->RemoveArenaSpellCooldowns();
+
+        }
+    }
 }
 
 void WorldSession::HandleDuelCancelledOpcode(WorldPacket& recvPacket)

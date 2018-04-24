@@ -823,6 +823,7 @@ void World::LoadConfigSettings(bool reload)
     setConfigPos(CONFIG_FLOAT_ALLIANCE_RATE_XP_KILL, "Alliance.Rate.XP.Kill", 0.0f);
     setConfigPos(CONFIG_FLOAT_ALLIANCE_RATE_XP_QUEST, "Alliance.Rate.XP.Quest", 0.0f);
     setConfigPos(CONFIG_FLOAT_ALLIANCE_RATE_REPUTATION_GAIN, "Alliance.Rate.Reputation.Gain", 0.0f);
+    setConfig(CONFIG_BOOL_DUEL_RESET, "DuelReset", false);
 
     ///- Read the "Data" directory from the config file
     std::string dataPath = sConfig.GetStringDefault("DataDir", "./");

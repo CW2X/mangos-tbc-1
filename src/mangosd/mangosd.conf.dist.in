@@ -1840,6 +1840,11 @@ AutoBroadcast.Timer = 60000
 #        Alliance Reputation rates
 #        Default: 0
 #
+#    DuelReset
+#        Reseting cooldown and restore health to start duel
+#        Default: 0 - off
+#                 1 - on
+#
 ###############################################################################
 
 WorldChatChannelMoney = 0
@@ -1849,3 +1854,4 @@ Horde.Rate.Reputation.Gain = 0
 Alliance.Rate.XP.Kill = 0
 Alliance.Rate.XP.Quest = 0
 Alliance.Rate.Reputation.Gain = 0
+DuelReset = 0
