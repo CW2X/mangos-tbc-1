@@ -7738,7 +7738,7 @@ void SpellAuraHolder::SetAuraFlag(uint32 slot, bool add)
     uint32 index    = slot / 4;
     uint32 byte     = (slot % 4) * 8;
     uint32 val      = m_target->GetUInt32Value(UNIT_FIELD_AURAFLAGS + index);
-    val &= (~uint32(AFLAG_MASK_ALL) << byte);
+    val &= ~(uint32(AFLAG_MASK_ALL) << byte);
     if (add)
     {
         const Unit* caster = GetCaster();
@@ -7755,9 +7755,6 @@ void SpellAuraHolder::SetAuraFlag(uint32 slot, bool add)
 
         if (m_spellProto->HasAttribute(SPELL_ATTR_PASSIVE))
             flags |= AFLAG_PASSIVE_DEPRECATED;
-
-        if (flags & AFLAG_HELPFUL)
-            flags |= AFLAG_HELPFUL_REVEALED;
 
         flags |= ((IsPositive() && !m_spellProto->HasAttribute(SPELL_ATTR_CANT_CANCEL)) ? AFLAG_CANCELABLE : AFLAG_NOT_CANCELABLE);
 
