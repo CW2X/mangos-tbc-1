@@ -157,8 +157,6 @@ struct boss_aranAI : public ScriptedAI
         m_bIsDrinking           = false;
         m_bDrinkInterrupted     = false;
 
-        m_attackDistance        = 100.f;
-
         for (uint32 i = 0; i < ARAN_ACTION_MAX; ++i)
             m_actionReadyStatus[i] = false;
 
@@ -422,18 +420,16 @@ struct boss_aranAI : public ScriptedAI
 
                             if (m_choiceVector.size() == 0)
                             {
-                                m_attackDistance = 0; // go into melee range
                                 DoStartMovement(m_creature->getVictim());
                                 return;
                             }
                             else
                             {
+                                DoStartMovement(m_creature->getVictim());
                                 uint32 currentSpellIndex = urand(0, m_choiceVector.size() - 1);
                                 uint32 currentSpellId = GetNormalSpellId(currentSpellIndex);
                                 DoCastSpellIfCan(pTarget, currentSpellId);
                                 m_normalSpellCooldown[currentSpellIndex] = GetNormalSpellCooldown(currentSpellId);
-                                m_attackDistance = 100.f;
-                                DoStartMovement(m_creature->getVictim());
                                 return;
                             }                            
                         }
