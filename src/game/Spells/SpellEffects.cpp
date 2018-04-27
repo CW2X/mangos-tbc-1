@@ -1393,7 +1393,14 @@ void Spell::EffectDummy(SpellEffectIndex eff_idx)
                         case 29947: // Flame Wreath
                         {
                             // Cast explosion debuff
-                            unitTarget->CastSpell(unitTarget, 29949, TRIGGERED_NONE);
+                            if (unitTarget && unitTarget->GetTypeId() == TYPEID_PLAYER)
+                            {
+                                if (unitTarget->HasAura(29947))
+                                    unitTarget->RemoveAurasDueToSpell(29947);
+
+                                unitTarget->CastSpell(unitTarget, 29949, TRIGGERED_NONE);
+                            }
+
                             return;
                         }
                         default:
