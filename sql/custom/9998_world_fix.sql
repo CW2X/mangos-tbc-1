@@ -76,4 +76,7 @@ UPDATE spell_bonus_data SET direct_bonus='0' WHERE entry='8026';
 -- q.9738(失踪的同伴)
 INSERT INTO `gossip_menu` VALUES (7520, 9119, 7520, 0);
 INSERT INTO `dbscripts_on_gossip` VALUES (7520, 0, 8, 17893, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 'killcredit');
+-- q.9978(不择手段)
+UPDATE gossip_menu_option SET action_script_id='7704' WHERE menu_id='7704' AND id='0';
+INSERT INTO `dbscripts_on_gossip` VALUES (7704, 0, 22, 16, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 'change faction');
 
